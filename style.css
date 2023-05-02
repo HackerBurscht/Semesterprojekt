@@ -31,3 +31,7 @@
     margin: 0;
     padding: 0;
 }
+
+.timewheel li:nth-child(6){
+    font-weight: bolder;
+}

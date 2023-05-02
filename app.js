@@ -147,7 +147,6 @@ let w_year = 2005
 const min_year = 1900
 const max_year = 2020
 
-
 function scroll_event(event) {
   event.preventDefault();
   // Increasing / Decreasing the variable
@@ -190,7 +189,9 @@ function create_timeline() {
   listItemUl.appendChild(listItemLi);
 
   listItemLi.addEventListener("click", () => {
-    w_year = item;
+    if (item > 2025){w_year = 2025;} 
+    else if (item < 1900){w_year = 1900;}
+    else {w_year = item;}
     console.log("Jump to new w_year:" + w_year)
     create_timeline()
   });
@@ -203,3 +204,6 @@ function create_timeline() {
 
 }
 
+window.onload = () => {
+  create_timeline();
+};
