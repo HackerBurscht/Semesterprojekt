@@ -9,14 +9,6 @@ fetch('./data.json')
     console.log(nobelPrizeData); // Log the data to the console
   });
 
-//This part of the code is from the Google API. For full explanation, visit: https://developers.google.com/custom-search/v1/reference/rest?hl=de
-function loadClient() {
-  gapi.client.setApiKey("AIzaSyC57eGC-7U10QUlLG4wmuzJ-UoxjJTbJR4");
-  return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/customsearch/v1/rest")
-      .then(function() { console.log("GAPI client loaded for API"); },
-            function(err) { console.error("Error loading GAPI client for API", err); });
-}  
-  
 // Define an asynchronous function to search for Nobel Prize winners by year
 async function searchByYear() {
 
@@ -32,6 +24,10 @@ async function searchByYear() {
 
   // Get the year input value from the input element with ID "yearInput"
   const yearInput = document.getElementById("yearInput").value;
+
+  // Write selected year to html-file
+  document.getElementById('s_year').innerHTML = yearInput;
+
   // Get the results element to display search results
   const results = document.getElementById("results");
   // Clear any existing search results from the element
@@ -101,42 +97,6 @@ async function searchByYear() {
         thumbnailUrl = pagesDe[firstPageIdDe].thumbnail?.source;
       }
 
-      // If no thumbnail image was found for the English and German Wikipedia, the Google API is used to gather the first Image throuh Google Image Search.
-      // This part of the code is adapted from the Google API. For full explanation, visit: https://developers.google.com/custom-search/v1/reference/rest?hl=de
-      if (!thumbnailUrl) {
-        const responseGoogle = d.Firstname + d.Surname  + "nobel price"; // Could add the string "nobel price" after the name. To filter out possible people with the same name.
-
-        loadClient();
-        // Make sure the client is loaded before calling this method.
-        function execute() {
-          return gapi.client.search.cse.list({
-            "cx": "131aef3a0d50447d3",
-            "imgSize": "LARGE",
-            "imgType": "IMG_TYPE_UNDEFINED",
-            "num": 2,
-            "q": responseGoogle,
-            "safe": "active",
-            "searchType": "image"
-          })
-            .then(function (response) {
-              // Handle the results here (response.result has the parsed body).
-              const items = response.result.items;
-              if (items.length > 0) {
-                const thumbnailUrl = items[0].link;
-                console.log(thumbnailUrl);
-                // If a thumbnail image was found, create an img element to display it
-                const thumbnailImage = document.createElement("img");
-                thumbnailImage.src = thumbnailUrl;
-                divItem.insertBefore(thumbnailImage, listItem);
-              }
-            },
-              function (err) { console.error("Execute error", err); });
-        }
-        gapi.load("client");
-        execute();
-
-      }
-
       // If a thumbnail image was found, create an img element to display it
       if (thumbnailUrl) {
         const thumbnailImage = document.createElement("img");
@@ -162,7 +122,7 @@ async function searchByYear() {
 }
   
 // Gets all filter-checkboxes and assigns an eventlistener to each
-const checkboxes = document.querySelectorAll(".filter_setting");
+const checkboxes = document.querySelectorAll(".form-check");
 checkboxes.forEach((checkbox) => {
   checkbox.addEventListener("click", searchByYear);
 });
@@ -176,4 +136,16 @@ document.getElementById("yearInput").addEventListener('keypress', function (pres
     searchByYear();
   }
 });
+
+
+const element = document.querySelector("div#graph-timeline");
+const output = document.querySelector("p#testvar");
+
+element.onscroll = (event) => {
+  output.innerHTML = s_year;
+  setTimeout(() => {
+    output.innerHTML = s_year;
+  }, 1000);
+};
+
 

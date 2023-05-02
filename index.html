@@ -5,29 +5,69 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nobel Prize Winners</title>
+  <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
   <link rel="stylesheet" href="style.css">
-  <script src="https://apis.google.com/js/api.js"></script>
-  <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
 </head>
 <body>
-  <h1>Nobel Prize Winners</h1>
-  <div class="search-container">
+  <nav class="navbar navbar-light navbar-expand-md fixed-top navbar-shrink py-3" id="mainNav">
+    <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><span>Brand</span></a></div>
+</nav>
+<header class="pt-5">
+    <div class="container pt-4 pt-xl-5">
+        <div class="row pt-5">
+            <div class="col-md-8 text-center text-md-start mx-auto">
+                <div class="text-center">
+                    <h1 class="display-4 fw-bold mb-5">Discover the history of nobelprice&nbsp;<span class="underline">winners</span>.</h1>
+                    <p class="fs-5 text-muted mb-5">Metus quisque ultricies vehicula proin, magna nullam.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<main>
+<div class="row" style="margin: 51px;margin-top: 0;margin-bottom: 0;margin-right: 5em;margin-left: 5em;">
     <div class="filterbox">
-      <div class="filter_setting"><input type="checkbox" id="gender_male" value="male" name="result_filter"> <label for="gender_male">Male</label></div>
-      <div class="filter_setting"><input type="checkbox" id="gender_female" value="female" name="result_filter"> <label for="gender_female">Female</label></div>
-      <div class="filter_setting"><input type="checkbox" id="physics"value="physics" name="result_filter"> <label for="physics">Physics</label></div>
-      <div class="filter_setting"><input type="checkbox" id="chemistry" value="chemistry" name="result_filter"> <label for="chemistry">Chemistry</label></div>
-      <div class="filter_setting"><input type="checkbox" id="medicine" value="medicine" name="result_filter"> <label for="medicine">Medicine</label></div>
-      <div class="filter_setting"><input type="checkbox" id="literature" value="literature" name="result_filter"> <label for="literature">Literature</label></div>
-      <div class="filter_setting"><input type="checkbox" id="economics" value="economics" name="result_filter"> <label for="economics">Economics</label></div>
-      <div class="filter_setting"><input type="checkbox" id="peace" value="peace" name="result_filter"> <label for="peace">Peace</label></div>
+      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="gender_male"><label class="form-check-label" for="formCheck-1">Male</label></div></div>  
+      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="gender_female"><label class="form-check-label" for="formCheck-1">Female</label></div></div>  
+      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="physics"><label class="form-check-label" for="formCheck-1">Physics</label></div></div>  
+      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="chemistry"><label class="form-check-label" for="formCheck-1">Chemistry</label></div></div>  
+      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="medicine"><label class="form-check-label" for="formCheck-1">Medicine</label></div></div>  
+      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="literature"><label class="form-check-label" for="formCheck-1">Literature</label></div></div>  
+      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="economics"><label class="form-check-label" for="formCheck-1">Economics</label></div></div>  
+      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="peace"><label class="form-check-label" for="formCheck-1">Peace</label></div></div>
+</div>
+<div class="row">
+  <div class="d-flex justify-content-center"><div class="search_bar"><input type="number" id="yearInput" placeholder="Enter year"><button id="searchButton">Search</button></div></div>
+</div>
+  <div class="row" id="main-timeline">
+    <div class="col">
+        <div>
+          <p id ="s_year">Selected year: </p>
+          <ul id="results"></ul>
+        </div>
     </div>
-    <div class="search_bar">
-      <input type="number" id="yearInput" placeholder="Enter year">
-      <button id="searchButton">Search</button>
+    <div class="col" id="graph-timeline">
+        <div>
+          2000<br>2001<br>2002<br>2003<br>2004
+        </div>
+        <p id="testvar">test</p>
     </div>
-  </div>
-  <ul id="results"></ul>
+</div>
+<ul id="results2"></ul>
+</main>
+<footer>
+<div class="container py-4 py-lg-5">
+    <hr>
+    <div class="text-muted d-flex justify-content-between align-items-center pt-3">
+        <p class="mb-0">Copyright © 2023 Brand</p>
+    </div>
+</div>
+</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="app.js"></script>
 </body>
+</html>
+
+
 </html>
