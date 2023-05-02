@@ -138,14 +138,68 @@ document.getElementById("yearInput").addEventListener('keypress', function (pres
 });
 
 
-const element = document.querySelector("div#graph-timeline");
-const output = document.querySelector("p#testvar");
+// Creates an eventhandler for the scrollwheel and defines a function to increase or decrease the timespan which should be displayed in the timeline.
+// Part of the code addapted from: https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
 
-element.onscroll = (event) => {
-  output.innerHTML = s_year;
-  setTimeout(() => {
-    output.innerHTML = s_year;
-  }, 1000);
-};
+document.getElementById("main-timeline").addEventListener("wheel", scroll_event, { passive: false });
 
+let w_year = 2005
+const min_year = 1900
+const max_year = 2020
+
+
+function scroll_event(event) {
+  event.preventDefault();
+  // Increasing / Decreasing the variable
+  if (event.deltaY < 0) {    // Scrolling up
+    w_year -= 10;
+  } else {                  // Scrolling down
+    w_year += 10;
+  }
+  // Checking if the value is bigger/smaller than the max/min value. If yes, values gets set to max/min.
+  if (w_year > max_year) {
+    w_year = max_year;
+  }
+
+  if (w_year < min_year) {
+    w_year = min_year;
+  }
+  console.log("w_year: " +w_year);
+  create_timeline()
+}
+
+function create_timeline() {
+  let time_span1 = w_year - 5;
+  let time_span2 = w_year + 5;
+
+  const  timespan = []
+
+  while (time_span1 <= time_span2){
+    timespan.push(time_span1)
+    time_span1 += 1
+  }
+
+  console.log(timespan)
+
+  const listItemUl = document.createElement("ul");
+  listItemUl.setAttribute("id", "ul_id")
+
+  timespan.forEach((item) => {
+  const listItemLi = document.createElement("li");
+  listItemLi.textContent = item;
+  listItemUl.appendChild(listItemLi);
+
+  listItemLi.addEventListener("click", () => {
+    w_year = item;
+    console.log("Jump to new w_year:" + w_year)
+    create_timeline()
+  });
+
+  });
+
+  const timewheel = document.getElementById("timewheel_id");
+  timewheel.innerHTML = "";
+  timewheel.appendChild(listItemUl);
+
+}
 
