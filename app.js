@@ -117,7 +117,6 @@ async function searchByYear() {
   // Clear any existing search results from the element
   results.innerHTML = "";
 
-
   // Checks if the filter checkboxes are selected and if yes, pushes the selected categories to the array
   if (physicsCheckbox.checked) selectedCategories.push("Physics");
   if (chemistryCheckbox.checked) selectedCategories.push("Chemistry");
@@ -146,6 +145,10 @@ async function searchByYear() {
   // Loop through the Nobel Prize winners for the specified year and category
   for (let i = 0; i < nobelPrizeSorted.length; i++) {
     const d = nobelPrizeSorted[i];
+ 
+    // Checks if every entry has a surname. If not "", is added. (Reason: Organisations have no surname in the json and undifined was declared and shown in the html)
+    if(!d.Surname){d.Surname = ""}
+
     // Create a div element to display the search result
     const divItem = document.createElement("div");
     divItem.className = "result-item";
@@ -155,7 +158,7 @@ async function searchByYear() {
     const text = document.createTextNode(`${d.Firstname} ${d.Surname}`);
     listItem.appendChild(text);
     divItem.appendChild(listItem);
-  
+
     try {
       let thumbnailUrl = null;
   
@@ -196,7 +199,7 @@ async function searchByYear() {
       // Append the result item to the results list
       results.appendChild(divItem);
     }
-
+    console.log("Data has been shown.")         // Log the status to the console
 }
 
 // Call the create_Timeline function when the page is loaded, to display the timeline.
@@ -213,12 +216,15 @@ checkboxes.forEach((checkbox) => {
 });
 
 // Assigns an eventlistener to the search button
-document.getElementById("searchButton").addEventListener("click", debouncedSearchByYear);
+//document.getElementById("searchButton").addEventListener("click", debouncedSearchByYear);
 
 // Creates an eventlistener for the "enter" key. 
 document.getElementById("yearInput").addEventListener('keypress', function (press) {
   if (press.key === "Enter") {
-    debouncedSearchByYear();
+    //w_year = document.getElementById("yearInput").value;
+    //console.log(w_year);
+    //create_timeline();
+    //debouncedSearchByYear();
   }
 });
 

@@ -15,8 +15,7 @@
 
 #results li{
     list-style-type: none;
-    margin: 0;
-    padding: 0;
+
 }
 
 .filterbox {
@@ -26,12 +25,31 @@
     margin-bottom: 1em;
 }
 
-.timewheel li {
+#ul_id {
     list-style-type: none;
     margin: 0;
     padding: 0;
+    color:rgb(97, 97, 97);
 }
 
-.timewheel li:nth-child(6){
+#ul_id li:nth-child(6){
     font-weight: bolder;
 }
+
+
+#ul_id li:hover {
+    font-weight: bold;
+    color: rgb(34, 34, 34);
+}
+
+/* .timewheel li::before {
+    content: "";
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background: rgb(255, 255, 255);
+    border-radius: 999px;
+    border: 3px solid orangered;
+    margin-right: 2em;
+} */
+
