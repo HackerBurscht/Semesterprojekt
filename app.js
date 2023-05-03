@@ -12,8 +12,86 @@ fetch('./data.json')
     console.log("JSON-Data has been read."); // Log the status in the console.
   });
 
+
+// Defines a function to increase or decrease the timespan which should be displayed in the timeline.
+// Part of the code addapted from: https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
+function scroll_event(event) {
+  event.preventDefault();
+  // Increasing / Decreasing the variable
+  if (event.deltaY < 0) {w_year -= 10;} // Scrolling up
+  else {w_year += 10;}                  // Scrolling down
+  // Checking if the value is bigger/smaller than the max/min value. If yes, values gets set to max/min
+  if (w_year > max_year) { w_year = max_year;}
+  if (w_year < min_year) {w_year = min_year;}
+  // Log the status to the console
+  console.log("Scroll Event has occured.") 
+  create_timeline()
+}
+
+function create_timeline() {
+  // Initialize variables to display the timeline
+  let time_span1 = w_year - 5;  // Is used to determine the startingpoint of the currently displayed timespan
+  let time_span2 = w_year + 5;  // Is used to determine the endpoint of the currently displayed timespan
+  const  timespan = []          // Is used to store the years of the current timespan in an array, which is used to create the li elements on the page
+
+  // Add the years of the current timespan to the array
+  while (time_span1 <= time_span2){
+    timespan.push(time_span1)
+    time_span1 += 1
+  }
+
+  // Create an ul-element and assign attribute "id"
+  const listItemUl = document.createElement("ul");
+  listItemUl.setAttribute("id", "ul_id")
+
+  // Create an li-elements for all items in the array "timespan"
+  timespan.forEach((item) => {
+  const listItemLi = document.createElement("li");
+  listItemLi.textContent = item;
+  listItemUl.appendChild(listItemLi);
+
+  // Assing an eventlistener to the li-elements, which fires when a click on a year in the timewheel is recongnized
+  listItemLi.addEventListener("click", () => {
+    if (item > 2025){w_year = 2025;}              // Checks if the clicked year is outside or inside the maximal number in the timeline
+    else if (item < 1900){w_year = 1900;}         // Checks if the clicked year is outside or inside the minimal number in the timeline
+    else {w_year = item;}                         // Changes the selected year to the clicked year
+
+    console.log("User jumped to different year.") // Log the status to the console
+    create_timeline()
+  });
+
+  });
+
+  const timewheel = document.getElementById("timewheel_id");
+  timewheel.innerHTML = "";                       // Delete the content of the timewheel div
+  timewheel.appendChild(listItemUl);              // Append the newly created li-elements to the div
+  debouncedSearchByYear();
+  console.log("Timeline has been created.")       // Log the status to the console
+}
+
+
+// Define a debounce function for the SearchByYearFunction
+// Code addapted from https://www.freecodecamp.org/news/javascript-debounce-example/
+function debounce(func, delayTime) {
+  let timeoutId;
+  return function (...args) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func.apply(null, args);
+    }, delayTime);
+  };
+}
+
+// Debounce your searchByYear function
+const debouncedSearchByYear = debounce(searchByYear, 500); // 500ms delay
+
 // Define an asynchronous function to search for Nobel Prize winners by year
 async function searchByYear() {
+
+  // Get the results element to display search results
+  const results = document.getElementById("results");
 
   // Assign variables to the checkboxes
   var maleCheckbox = document.getElementById("gender_male");
@@ -28,11 +106,6 @@ async function searchByYear() {
   // Get the year input value from the w_year variable and convert it to a string
   const yearInputNumber = w_year;
   const yearInputString = yearInputNumber.toString();
-
-  // Get the results element to display search results
-  const results = document.getElementById("results");
-  // Clear any existing search results from the element
-  results.innerHTML = "";
   
   // Filter the Nobel Prize data to get only the winners from the specified year
   const nobelPrizeWinners = nobelPrizeData.filter((d) => d.Year === yearInputString);
@@ -40,6 +113,10 @@ async function searchByYear() {
   // Create arays for both the selected categories and the selected genders
   const selectedCategories = [];
   const selectedGenders = [];
+
+  // Clear any existing search results from the element
+  results.innerHTML = "";
+
 
   // Checks if the filter checkboxes are selected and if yes, pushes the selected categories to the array
   if (physicsCheckbox.checked) selectedCategories.push("Physics");
@@ -121,86 +198,29 @@ async function searchByYear() {
     }
 
 }
-  
 
-// Defines a function to increase or decrease the timespan which should be displayed in the timeline.
-// Part of the code addapted from: https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
-function scroll_event(event) {
-  event.preventDefault();
-  // Increasing / Decreasing the variable
-  if (event.deltaY < 0) {w_year -= 10;} // Scrolling up
-  else {w_year += 10;}                  // Scrolling down
-  // Checking if the value is bigger/smaller than the max/min value. If yes, values gets set to max/min
-  if (w_year > max_year) { w_year = max_year;}
-  if (w_year < min_year) {w_year = min_year;}
-  // Log the status to the console
-  console.log("Scroll Event has occured.") 
-  create_timeline()
-}
-
-function create_timeline() {
-  // Initialize variables to display the timeline
-  let time_span1 = w_year - 5;  // Is used to determine the startingpoint of the currently displayed timespan
-  let time_span2 = w_year + 5;  // Is used to determine the endpoint of the currently displayed timespan
-  const  timespan = []          // Is used to store the years of the current timespan in an array, which is used to create the li elements on the page
-
-  // Add the years of the current timespan to the array
-  while (time_span1 <= time_span2){
-    timespan.push(time_span1)
-    time_span1 += 1
-  }
-
-  // Create an ul-element and assign attribute "id"
-  const listItemUl = document.createElement("ul");
-  listItemUl.setAttribute("id", "ul_id")
-
-  // Create an li-elements for all items in the array "timespan"
-  timespan.forEach((item) => {
-  const listItemLi = document.createElement("li");
-  listItemLi.textContent = item;
-  listItemUl.appendChild(listItemLi);
-
-  // Assing an eventlistener to the li-elements, which fires when a click on a year in the timewheel is recongnized
-  listItemLi.addEventListener("click", () => {
-    if (item > 2025){w_year = 2025;}              // Checks if the clicked year is outside or inside the maximal number in the timeline
-    else if (item < 1900){w_year = 1900;}         // Checks if the clicked year is outside or inside the minimal number in the timeline
-    else {w_year = item;}                         // Changes the selected year to the clicked year
-
-    console.log("User jumped to different year.") // Log the status to the console
-    create_timeline()
-  });
-
-  });
-
-  const timewheel = document.getElementById("timewheel_id");
-  timewheel.innerHTML = "";                       // Delete the content of the timewheel div
-  timewheel.appendChild(listItemUl);              // Append the newly created li-elements to the div
-  searchByYear();
-  console.log("Timeline has been created.")       // Log the status to the console
-}
-
+// Call the create_Timeline function when the page is loaded, to display the timeline.
 window.onload = () => {
   create_timeline();
 };
 
 
 // Global Eventhandler functions
-
 // Gets all filter-checkboxes and assigns an eventlistener to each
 const checkboxes = document.querySelectorAll(".form-check");
 checkboxes.forEach((checkbox) => {
-  checkbox.addEventListener("click", searchByYear);
+  checkbox.addEventListener("click", debouncedSearchByYear);
 });
 
 // Assigns an eventlistener to the search button
-document.getElementById("searchButton").addEventListener("click", searchByYear);
+document.getElementById("searchButton").addEventListener("click", debouncedSearchByYear);
 
 // Creates an eventlistener for the "enter" key. 
 document.getElementById("yearInput").addEventListener('keypress', function (press) {
   if (press.key === "Enter") {
-    searchByYear();
+    debouncedSearchByYear();
   }
 });
 
 // Assigns an eventlistener to the scrollwheel.
-document.getElementById("main-timeline").addEventListener("wheel", scroll_event, { passive: false });
+document.getElementById("graph-timeline").addEventListener("wheel", scroll_event, { passive: false });
