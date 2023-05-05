@@ -1,88 +1,31 @@
-// Initialize variables to display the timeline
-let w_year = 2005           // Is used to determine the currently selected year in the timeline.
-const min_year = 1900       // Is used to limit the timeline to a fixed startingpoint.
-const max_year = 2020       // Is used to limit the timeline to a fixed endgpoint.
-let nobelPrizeData = null;  // Initialize a variable to store Nobel Prize data
+// Initialize variables to display the timeline, JSON-Data and the images from the API
+const timelineList = document.querySelector('.timeline-list');
+const timelineListByID = document.getElementById("timelineID");
+const min_year = 1901;      // Is used to limit the timeline to a fixed startingpoint
+const max_year = 2022;      // Is used to limit the timeline to a fixed endgpoint
+let activeYear = 2000;      // Defines the year which is shown on startup
+let passiveYear = [];       // Contains all the years which are shown next to the currently selected year "activeYear"
+let nobelPrizeData = null;  // Initialize a variable/array to store Nobel Prize data
 
-// Use the fetch API to load Nobel Prize data from a local JSON file
-fetch('./data.json')
-  .then(response => response.json()) // Parse the response as JSON
-  .then(data => {
-    nobelPrizeData = data; // Store the parsed data in the `nobelPrizeData` variable
-    console.log("JSON-Data has been read."); // Log the status in the console.
-  });
-
-
-// Defines a function to increase or decrease the timespan which should be displayed in the timeline.
-// Part of the code addapted from: https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event
-function scroll_event(event) {
-  event.preventDefault();
-  // Increasing / Decreasing the variable
-  if (event.deltaY < 0) {w_year -= 10;} // Scrolling up
-  else {w_year += 10;}                  // Scrolling down
-  // Checking if the value is bigger/smaller than the max/min value. If yes, values gets set to max/min
-  if (w_year > max_year) { w_year = max_year;}
-  if (w_year < min_year) {w_year = min_year;}
-  // Log the status to the console
-  console.log("Scroll Event has occured.") 
-  create_timeline()
-}
-
-function create_timeline() {
-  // Initialize variables to display the timeline
-  let time_span1 = w_year - 5;  // Is used to determine the startingpoint of the currently displayed timespan
-  let time_span2 = w_year + 5;  // Is used to determine the endpoint of the currently displayed timespan
-  const  timespan = []          // Is used to store the years of the current timespan in an array, which is used to create the li elements on the page
-
-  // Add the years of the current timespan to the array
-  while (time_span1 <= time_span2){
-    timespan.push(time_span1)
-    time_span1 += 1
-  }
-
-  // Create an ul-element and assign attribute "id"
-  const listItemUl = document.createElement("ul");
-  listItemUl.setAttribute("id", "ul_id")
-
-  // Create an li-elements for all items in the array "timespan"
-  timespan.forEach((item) => {
-  const listItemLi = document.createElement("li");
-  listItemLi.textContent = item;
-  listItemUl.appendChild(listItemLi);
-
-  // Assing an eventlistener to the li-elements, which fires when a click on a year in the timewheel is recongnized
-  listItemLi.addEventListener("click", () => {
-    if (item > 2025){w_year = 2025;}              // Checks if the clicked year is outside or inside the maximal number in the timeline
-    else if (item < 1900){w_year = 1900;}         // Checks if the clicked year is outside or inside the minimal number in the timeline
-    else {w_year = item;}                         // Changes the selected year to the clicked year
-
-    console.log("User jumped to different year.") // Log the status to the console
-    create_timeline()
-  });
-
-  });
-
-  const timewheel = document.getElementById("timewheel_id");
-  timewheel.innerHTML = "";                       // Delete the content of the timewheel div
-  timewheel.appendChild(listItemUl);              // Append the newly created li-elements to the div
-  debouncedSearchByYear();
-  console.log("Timeline has been created.")       // Log the status to the console
-}
-
-
-// Define a debounce function for the SearchByYearFunction
-// Code addapted from https://www.freecodecamp.org/news/javascript-debounce-example/
-function debounce(func, delayTime) {
-  let timeoutId;
-  return function (...args) {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
+/* Animate.css from https://animate.style/
+Animate.css is a library of ready-to-use, cross-browser animations for use in your web projects.
+Great for emphasis, home pages, sliders, and attention-guiding hints. 
+Code adapted from documentaion*/
+const animateCSS = (element, animation, prefix = 'animate__') =>
+  // We create a Promise and return it
+  new Promise((resolve, reject) => {
+    const animationName = `${prefix}${animation}`;
+    const node = document.querySelector(element);
+    node.classList.add(`${prefix}animated`, animationName);
+    // When the animation ends, we clean the classes and resolve the Promise
+    function handleAnimationEnd(event) {
+      event.stopPropagation();
+      node.classList.remove(`${prefix}animated`, animationName);
+      node.style.setProperty('--animate-duration', '0.15s');
+      resolve('Animation ended');
     }
-    timeoutId = setTimeout(() => {
-      func.apply(null, args);
-    }, delayTime);
-  };
-}
+    node.addEventListener('animationend', handleAnimationEnd, {once: true});
+  });
 
 // Debounce your searchByYear function
 const debouncedSearchByYear = debounce(searchByYear, 500); // 500ms delay
@@ -103,8 +46,8 @@ async function searchByYear() {
   var economicsCheckbox = document.getElementById("economics");
   var peaceCheckbox = document.getElementById("peace");
 
-  // Get the year input value from the w_year variable and convert it to a string
-  const yearInputNumber = w_year;
+  // Get the year input value from the activeYear variable and convert it to a string
+  const yearInputNumber = activeYear;
   const yearInputString = yearInputNumber.toString();
   
   // Filter the Nobel Prize data to get only the winners from the specified year
@@ -202,14 +145,117 @@ async function searchByYear() {
     console.log("Data has been shown.")         // Log the status to the console
 }
 
-// Call the create_Timeline function when the page is loaded, to display the timeline.
-window.onload = () => {
-  create_timeline();
-};
+// Create the list items containing the years of the timeline 
+for (let year = min_year; year <= max_year; year++) {
+  // Create li elements with the content "year" e.g. "2001"
+  const listItem = document.createElement('li');
+  listItem.textContent = year;
+  // Defines the class "timeline-item" to the li elements
+  listItem.setAttribute("class", "timeline-item");
+  timelineList.appendChild(listItem);
+
+  // Assing an eventlistener to the li-elements, which fires when a click on a year in the timewheel is recongnized
+  listItem.addEventListener("click", () => {
+  if (year > max_year){activeYear = max_year;}              // Checks if the clicked year is outside or inside the maximal number in the timeline
+  else if (year < min_year){activeYear = min_year;}         // Checks if the clicked year is outside or inside the minimal number in the timeline
+  else {activeYear = year;}                                 // Changes the selected year to the clicked year
+
+  console.log("User jumped to different year.") // Log the status to the console
+  calculatePassiveYears(activeYear);
+});
+}
+
+// Selects als li elements containing the years from the timeline
+const timelineItems = document.querySelectorAll('.timeline-item');
+
+//Calculates which li elements should be shown and assings diffrent classes to each. Those are used to differentiate each other and to hide those currently not shown.
+function calculatePassiveYears(activeYear) {
+  let i = 1;
+  //Empty array "passiveYear"
+  passiveYear = []
+  // Adds 4 years befor and after the selected year (activeYear) into the array.
+  while(i < 5){
+    passiveYear.push(activeYear -i);
+    passiveYear.push(activeYear +i);
+    i++;
+  }
+  // Sort "function" for numbers from: https://www.w3schools.com/js/js_array_sort.asp
+  passiveYear.sort(function(a, b){return a - b});
+  for (i = 0; i < timelineItems.length; i++) {
+    //Checks if the years inside the array are values from li elements on the page and adds further html classes o those
+    let ckeckVar = Number(timelineItems[i].innerHTML);
+    if(passiveYear.includes(ckeckVar)){
+      timelineItems[i].setAttribute("class", "timeline-item passive");
+    } else {
+      timelineItems[i].setAttribute("class", "timeline-item invisible");
+    }
+    if (ckeckVar == activeYear){
+      timelineItems[i].setAttribute("class", "timeline-item active");
+    }
+  }
+  debouncedSearchByYear()
+}
+
+calculatePassiveYears(activeYear);
+
+// Use the fetch API to load Nobel Prize data from a local JSON file
+fetch('./data.json')
+  .then(response => response.json()) // Parse the response as JSON
+  .then(data => {
+    nobelPrizeData = data; // Store the parsed data in the `nobelPrizeData` variable
+    console.log("JSON-Data has been read."); // Log the status in the console.
+  });
 
 
-// Global Eventhandler functions
-// Gets all filter-checkboxes and assigns an eventlistener to each
+/*Defines a function to increase or decrease the timespan which should be displayed in the timeline.
+Part of the code addapted from: https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event */
+function scroll_event(event) {
+  event.preventDefault(); 
+  
+  // Increasing / Decreasing the variable
+  if (event.deltaY < 0) {
+  animateCSS('.timeline', 'fadeOutDown').then((message) => {
+  activeYear -= 1;
+  animateCSS('.timeline', 'fadeInDown').then((message) => {
+	});
+  // Do something after the animation
+	});
+  } // Scrolling up
+  else {
+  animateCSS('.timeline', 'fadeOutUp').then((message) => {
+  activeYear += 1;
+  animateCSS('.timeline', 'fadeInUp').then((message) => {
+	});
+  // Do something after the animation
+	});
+  } // Scrolling down
+  
+  // Checking if the value is bigger/smaller than the max/min value. If yes, values gets set to max/min
+  if (activeYear > max_year) {activeYear = max_year;}
+  if (activeYear < min_year) {activeYear = min_year;}
+  
+  calculatePassiveYears(activeYear);
+	
+  // Log the status to the console
+  console.log("Scroll Event has occured.") 
+}
+
+/* Define a debounce function for the SearchByYearFunction
+Code addapted from https://www.freecodecamp.org/news/javascript-debounce-example/ */
+function debounce(func, delayTime) {
+  let timeoutId;
+  return function (...args) {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    timeoutId = setTimeout(() => {
+      func.apply(null, args);
+    }, delayTime);
+  };
+}
+
+/* Global Eventhandler functions
+Gets all filter-checkboxes and assigns an eventlistener to each */
 const checkboxes = document.querySelectorAll(".form-check");
 checkboxes.forEach((checkbox) => {
   checkbox.addEventListener("click", debouncedSearchByYear);
@@ -221,12 +267,14 @@ checkboxes.forEach((checkbox) => {
 // Creates an eventlistener for the "enter" key. 
 document.getElementById("yearInput").addEventListener('keypress', function (press) {
   if (press.key === "Enter") {
-    //w_year = document.getElementById("yearInput").value;
-    //console.log(w_year);
+    //activeYear = document.getElementById("yearInput").value;
+    //console.log(activeYear);
     //create_timeline();
     //debouncedSearchByYear();
   }
 });
 
-// Assigns an eventlistener to the scrollwheel.
-document.getElementById("graph-timeline").addEventListener("wheel", scroll_event, { passive: false });
+// Creates an eventlistener for the "wheel" event 
+document.getElementById("timelineID").addEventListener("wheel", scroll_event, { passive: false });
+
+
