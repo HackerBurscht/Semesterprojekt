@@ -121,6 +121,11 @@ async function searchByYear() {
         thumbnailUrl = pagesDe[firstPageIdDe].thumbnail?.source;
       }
 
+      if (!thumbnailUrl) {
+        thumbnailUrl = "assets/img/placeholder.png";
+      }
+    
+
       // If a thumbnail image was found, create an img element to display it
       if (thumbnailUrl) {
         const thumbnailImage = document.createElement("img");
