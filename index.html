@@ -42,16 +42,16 @@
   <div class="d-flex justify-content-center"><div class="search_bar"><input type="number" id="yearInput" placeholder="Enter year"><button id="searchButton">Search</button></div></div>
 </div>
   <div class="row" id="main-timeline">
-    <div class="col">
-        <div>
-          <ul id="results"></ul>
-        </div>
-    </div>
     <div class="col" id="graph-timeline">
       <div class="timeline" id="timelineID">
         <ul class="timeline-list"></ul>
       </div>
     </div>
+    <div class="col" id="year_selector">
+      <div>
+        <ul id="results"></ul>
+      </div>
+  </div>
 </div>
 <section class="modal hidden">
   <div class="flex">
@@ -60,14 +60,13 @@
   <div class="modal_content">
     <div class="modal_header">
       <img src="assets/img/placeholder.png" width="150px" height="150px"/>
-      <h3 id="name_modal">Albert fucking Einstein</h3>
+      <h3 id="modal-name"></h3>
     </div>
     <div class="modal_main">
-      <p>Country: Vatican</p>
-      <p>Born in: 1984</p>
-      <p>Lived until: 1966</p>
-      <p>Awarded category: Big booty bitches</p>
-      <p>Motivation: Slaying bad ass dragons</p>
+      <p id="modal-country"></p>
+      <p id="modal-born"></p>
+      <p id="modal-dead"></p>
+      <p id="modal-motivation"></p>
     </div>
 
   </div>

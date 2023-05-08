@@ -27,6 +27,18 @@ const animateCSS = (element, animation, prefix = 'animate__') =>
     node.addEventListener('animationend', handleAnimationEnd, {once: true});
   });
 
+
+ // Creaters the data and shows the modal for each result div (Nobelprice winner)
+function createModal(name, born, died, motivation, country){
+  document.getElementById("modal-name").innerHTML = name;
+  document.getElementById("modal-country").innerHTML = "Born in: " + country;
+  document.getElementById("modal-born").innerHTML = "Born: " + born;
+  document.getElementById("modal-dead").innerHTML = "Died: " + died;
+  document.getElementById("modal-motivation").innerHTML = "Motivation: " + motivation;
+  console.log(name, born, died, motivation, country);
+  openModal()
+} 
+
 // Debounce your searchByYear function
 const debouncedSearchByYear = debounce(searchByYear, 500); // 500ms delay
 
@@ -84,7 +96,7 @@ async function searchByYear() {
     const isGenderSelected = selectedGenders.length ? selectedGenders.includes(entry.Gender) || selectedGenders.includes("org") : true;
     return isCategorySelected && isGenderSelected;
   });
-  
+
   // Loop through the Nobel Prize winners for the specified year and category
   for (let i = 0; i < nobelPrizeSorted.length; i++) {
     const d = nobelPrizeSorted[i];
@@ -95,6 +107,17 @@ async function searchByYear() {
     // Create a div element to display the search result
     const divItem = document.createElement("div");
     divItem.className = "result-item";
+    // Add an event listener to the div element
+    divItem.addEventListener("click", function() {
+    // Get the name of the Nobel laureate from the text of the list item
+    const name = `${d.Firstname} ${d.Surname}`;
+    const born = `${d.Born}`;
+    const died = `${d.Died}`;
+    const motivation = `${d.Motivation}`;
+    const country = `${d.Country}`;
+    // Call your function with the name of the Nobel laureate
+    createModal(name, born, died, motivation, country);
+  });
   
     // Create a list item element to display the winner's name
     const listItem = document.createElement("li");
@@ -121,11 +144,11 @@ async function searchByYear() {
         thumbnailUrl = pagesDe[firstPageIdDe].thumbnail?.source;
       }
 
+      // If still no img is found the url to the local placeholder image is used
       if (!thumbnailUrl) {
         thumbnailUrl = "assets/img/placeholder.png";
       }
     
-
       // If a thumbnail image was found, create an img element to display it
       if (thumbnailUrl) {
         const thumbnailImage = document.createElement("img");
@@ -133,7 +156,8 @@ async function searchByYear() {
         divItem.insertBefore(thumbnailImage, listItem);
       }
     } catch (err) {
-      console.error(err); // Log any errors to the console
+      // Log any errors to the console
+      console.error(err); 
     }
   
       // Create a list item element for the Nobel prize winner's category
@@ -147,7 +171,8 @@ async function searchByYear() {
       // Append the result item to the results list
       results.appendChild(divItem);
     }
-    console.log("Data has been shown.")         // Log the status to the console
+
+
 }
 
 // Create the list items containing the years of the timeline 
@@ -274,13 +299,16 @@ document.getElementById("yearInput").addEventListener('keypress', function (pres
   if (press.key === "Enter") {
     //activeYear = document.getElementById("yearInput").value;
     //console.log(activeYear);
-    //create_timeline();
-    //debouncedSearchByYear();
+    //calculatePassiveYears(activeYear);
   }
 });
 
 // Creates an eventlistener for the "wheel" event 
 document.getElementById("timelineID").addEventListener("wheel", scroll_event, { passive: false });
+
+
+
+
 
 
 //EH for modal https://www.freecodecamp.org/news/how-to-build-a-modal-with-javascript/
@@ -310,3 +338,8 @@ overlay.addEventListener("click", closeModal)
     modalClose();
   }
 }); */
+
+
+
+
+
