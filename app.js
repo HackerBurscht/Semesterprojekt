@@ -28,19 +28,21 @@ const animateCSS = (element, animation, prefix = 'animate__') =>
   });
 
 
- // Creaters the data and shows the modal for each result div (Nobelprice winner)
-function createModal(name, born, died, motivation, country){
+ // Creaters the data and shows the modal for each result div (Nobelprice winner). 
+function createModal(name, born, died, motivation, country, thumbnailUrlModal){
   document.getElementById("modal-name").innerHTML = name;
-  document.getElementById("modal-country").innerHTML = "Born in: " + country;
-  document.getElementById("modal-born").innerHTML = "Born: " + born;
-  document.getElementById("modal-dead").innerHTML = "Died: " + died;
-  document.getElementById("modal-motivation").innerHTML = "Motivation: " + motivation;
-  console.log(name, born, died, motivation, country);
+  document.getElementById("modal-country").innerHTML = country;
+  document.getElementById("modal-born").innerHTML = born;
+  document.getElementById("modal-dead").innerHTML = died;
+  document.getElementById("modal-motivation").innerHTML = motivation;
+  document.getElementById("modal-image").src = thumbnailUrlModal;
   openModal()
 } 
 
 // Debounce your searchByYear function
 const debouncedSearchByYear = debounce(searchByYear, 500); // 500ms delay
+
+let imageUrlModalArray = [];
 
 // Define an asynchronous function to search for Nobel Prize winners by year
 async function searchByYear() {
@@ -107,17 +109,7 @@ async function searchByYear() {
     // Create a div element to display the search result
     const divItem = document.createElement("div");
     divItem.className = "result-item";
-    // Add an event listener to the div element
-    divItem.addEventListener("click", function() {
-    // Get the name of the Nobel laureate from the text of the list item
-    const name = `${d.Firstname} ${d.Surname}`;
-    const born = `${d.Born}`;
-    const died = `${d.Died}`;
-    const motivation = `${d.Motivation}`;
-    const country = `${d.Country}`;
-    // Call your function with the name of the Nobel laureate
-    createModal(name, born, died, motivation, country);
-  });
+
   
     // Create a list item element to display the winner's name
     const listItem = document.createElement("li");
@@ -125,9 +117,9 @@ async function searchByYear() {
     listItem.appendChild(text);
     divItem.appendChild(listItem);
 
+    let thumbnailUrlModal = "";
     try {
       let thumbnailUrl = null;
-  
       // Use the Wikipedia API to get the thumbnail image for the winner's English Wikipedia page
       const responseEng = await fetch(`https://en.wikipedia.org/w/api.php?origin=*&action=query&titles=${d.Firstname}_${d.Surname}&prop=pageimages&format=json&pithumbsize=300`);
       const dataEng = await responseEng.json();
@@ -150,16 +142,31 @@ async function searchByYear() {
       }
     
       // If a thumbnail image was found, create an img element to display it
-      if (thumbnailUrl) {
-        const thumbnailImage = document.createElement("img");
-        thumbnailImage.src = thumbnailUrl;
-        divItem.insertBefore(thumbnailImage, listItem);
-      }
+      const thumbnailImage = document.createElement("img");
+      thumbnailImage.src = thumbnailUrl;
+      divItem.insertBefore(thumbnailImage, listItem);
+      thumbnailUrlModal = thumbnailUrl
+
     } catch (err) {
       // Log any errors to the console
       console.error(err); 
     }
-  
+      // Add an event listener to the div element
+      divItem.addEventListener("click", function() {
+        // Get the data of for the form from the array
+        const name = `${d.Firstname} ${d.Surname}`;
+        let motivation = "Motivation: " + `${d.Motivation}`;
+        let born = "";
+        let died = "";
+        let country = "";
+        // Check if...
+        if(!d.Born){born = ""}else{born = "Born: " + `${d.Born}`;};
+        if(!d.Died){d.Died = ""}else{died = "Died: " + `${d.Died}`;};
+        if(!d.Country){d.Country = ""}else{country = "Born in: " + `${d.Country}`;};
+        // Call createModal function with with the according data
+        createModal(name, born, died, motivation, country, thumbnailUrlModal);
+      });
+
       // Create a list item element for the Nobel prize winner's category
       const categoryItem = document.createElement("li");
       // Create a text node with the category of the Nobel prize winner
@@ -322,7 +329,7 @@ const openModal = function () {
   overlay.classList.remove("hidden");
 };
 
-openModalBtn.addEventListener("click", openModal);
+//openModalBtn.addEventListener("click", openModal);
 
 const closeModal = function () {
   modal.classList.add("hidden");
