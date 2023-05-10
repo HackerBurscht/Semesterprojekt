@@ -1,3 +1,24 @@
+body{
+  background-image: url("assets/img/bg.png");
+  color: #fafafa;
+}
+.pt-4{
+  padding-top: 2rem;
+}
+
+.underline:after{
+  background: #ab864f;
+}
+
+.checkbox-text{
+  color: #ab864f;
+  font-weight: bold;
+  padding-right: 1em;;
+}
+
+.form-check{
+  padding-right:2.5em;
+}
 #main-timeline{
     margin-top: 2em;
 }
@@ -23,8 +44,8 @@
 }
 
 #graph-timeline{
-  margin-left: 20%;
-  margin-right: 20%;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .timeline-list{
@@ -36,8 +57,26 @@
 .filterbox {
     display: flex;
     align-items: center;
-    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
     margin-bottom: 1em;
+}
+
+.box_left{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.box_right{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.hr_big{
+  width: 80%;
+  border-bottom: solid 1px #414043;
 }
 
 .active{
@@ -70,10 +109,11 @@
     flex-direction: column;
     justify-content: center;
     gap: 0.4rem;
-    width: 450px;
+    width: 20px;
+    min-width: 500px;
     padding: 1.3rem;
     max-height: 55%;
-    margin-left: 33.3%;
+    margin-left: 40%;
     position: absolute;
     top: 40%;
     background-color: white;
@@ -149,3 +189,47 @@
   .modal_header{
     display: flex;
   }
+
+
+
+  .time_slider{
+    margin-top: 3em;
+    margin-bottom: 5em;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 60%;
+    position: relative;
+    font-size:small;
+    cursor: pointer;
+  }
+
+.slider_item::after{
+    content: "";
+    position: absolute;
+    top: -10px;
+    transform: translateX(-140%);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #AEB6BF;
+    z-index: 1;
+}
+
+.timebar{
+    width: 100%;
+    height: 0.2em;
+    background: #AEB6BF;
+}
+
+.timebar_progress{
+    /* width: $distancePerc;*/
+    height: 0.2em;
+    background: #ab864f;
+}
+.slider_item{
+  transform: translateX(-50%);
+}

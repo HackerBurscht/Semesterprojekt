@@ -230,7 +230,8 @@ function calculatePassiveYears(activeYear) {
       timelineItems[i].setAttribute("class", "timeline-item active");
     }
   }
-  debouncedSearchByYear()
+  debouncedSearchByYear();
+  progress();
 }
 
 calculatePassiveYears(activeYear);
@@ -346,6 +347,15 @@ overlay.addEventListener("click", closeModal)
   }
 }); */
 
+
+function progress(){
+  let scale = Number(max_year-min_year);
+  let distance = Number(activeYear-min_year);
+  let distancePerc = 100/scale*distance;
+
+  let progress = document.querySelector(".timebar_progress")
+  progress.style.width = distancePerc+"%";
+}
 
 
 

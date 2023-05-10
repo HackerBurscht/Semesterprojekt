@@ -11,32 +11,51 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <nav class="navbar navbar-light navbar-expand-md fixed-top navbar-shrink py-3" id="mainNav">
-    <div class="container"><a class="navbar-brand d-flex align-items-center" href="/"><span>Brand</span></a></div>
-</nav>
-<header class="pt-5">
+<header class="pt-4">
     <div class="container pt-4 pt-xl-5">
         <div class="row pt-5">
             <div class="col-md-8 text-center text-md-start mx-auto">
                 <div class="text-center">
                     <h1 class="display-4 fw-bold mb-5">Discover the history of nobelprice&nbsp;<span class="underline">winners</span>.</h1>
-                    <p class="fs-5 text-muted mb-5">Metus quisque ultricies vehicula proin, magna nullam.</p>
                 </div>
             </div>
         </div>
     </div>
 </header>
 <main>
-<div class="row" style="margin: 51px;margin-top: 0;margin-bottom: 0;margin-right: 5em;margin-left: 5em;">
+  <div class="time_slider">
+    <div class="timebar"><div class="timebar_progress"></div></div>
+    <span class="slider_item" data-year="1910">1901</span>
+		<span class="slider_item" data-year="1910">1910</span>
+    <span class="slider_item" data-year="1920">1920</span>
+    <span class="slider_item" data-year="1930">1930</span>
+    <span class="slider_item" data-year="1940">1940</span>
+    <span class="slider_item"data-year="1950">1950</span>
+    <span class="slider_item" data-year="1960">1960</span>
+    <span class="slider_item" data-year="1970">1970</span>
+    <span class="slider_item" data-year="1980">1980</span>
+    <span class="slider_item" data-year="1990">1990</span>
+    <span class="slider_item" data-year="1990">2000</span>
+    <span class="slider_item" data-year="1990">2010</span>
+    <span class="slider_item" data-year="1990">2020</span>
+</div>
+<div class="row" style="margin-right: auto;margin-left: auto;width: 60%;">
     <div class="filterbox">
-      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="gender_male"><label class="form-check-label" for="formCheck-1">Male</label></div></div>  
-      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="gender_female"><label class="form-check-label" for="formCheck-1">Female</label></div></div>  
-      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="physics"><label class="form-check-label" for="formCheck-1">Physics</label></div></div>  
-      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="chemistry"><label class="form-check-label" for="formCheck-1">Chemistry</label></div></div>  
-      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="medicine"><label class="form-check-label" for="formCheck-1">Medicine</label></div></div>  
-      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="literature"><label class="form-check-label" for="formCheck-1">Literature</label></div></div>  
-      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="economics"><label class="form-check-label" for="formCheck-1">Economics</label></div></div>  
-      <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="peace"><label class="form-check-label" for="formCheck-1">Peace</label></div></div>
+      <div class="box_left">
+        <div class="col"><span class="checkbox-text">Gender: </span></div>
+        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="gender_male"><label class="form-check-label" for="formCheck-1">Male</label></div></div>  
+        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="gender_female"><label class="form-check-label" for="formCheck-1">Female</label></div></div>  
+      </div>
+      <div class="box_right">
+        <div class="col"><span class="checkbox-text">Category: </span></div>  
+        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="physics"><label class="form-check-label" for="formCheck-1">Physics</label></div></div>  
+        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="chemistry"><label class="form-check-label" for="formCheck-1">Chemistry</label></div></div>  
+        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="medicine"><label class="form-check-label" for="formCheck-1">Medicine</label></div></div>  
+        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="literature"><label class="form-check-label" for="formCheck-1">Literature</label></div></div>  
+        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="economics"><label class="form-check-label" for="formCheck-1">Economics</label></div></div>  
+        <div class="col"><div class="form-check"><input class="form-check-input" type="checkbox" id="peace"><label class="form-check-label" for="formCheck-1">Peace</label></div></div>
+      </div>
+      <hr class="hr_big">
 </div>
 <div class="row">
   <div class="d-flex justify-content-center"><div class="search_bar"><input type="number" id="yearInput" placeholder="Enter year"><button id="searchButton">Search</button></div></div>
@@ -53,6 +72,7 @@
       </div>
   </div>
 </div>
+
 <section class="modal hidden">
   <div class="flex">
     <button class="btn-close">⨉</button>
@@ -78,9 +98,6 @@
 <footer>
 <div class="container py-4 py-lg-5">
     <hr>
-    <div class="text-muted d-flex justify-content-between align-items-center pt-3">
-        <p class="mb-0">Copyright © 2023 Brand</p>
-    </div>
 </div>
 </footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
