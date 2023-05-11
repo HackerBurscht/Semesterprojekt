@@ -207,14 +207,12 @@ const timelineItems = document.querySelectorAll('.timeline-item');
 
 //Calculates which li elements should be shown and assings diffrent classes to each. Those are used to differentiate each other and to hide those currently not shown.
 function calculatePassiveYears(activeYear) {
-  let i = 1;
   //Empty array "passiveYear"
   passiveYear = []
   // Adds 4 years befor and after the selected year (activeYear) into the array.
-  while(i < 5){
+  for (i = 1; i<5; i++){
     passiveYear.push(activeYear -i);
     passiveYear.push(activeYear +i);
-    i++;
   }
   // Sort "function" for numbers from: https://www.w3schools.com/js/js_array_sort.asp
   passiveYear.sort(function(a, b){return a - b});
@@ -232,6 +230,7 @@ function calculatePassiveYears(activeYear) {
   }
   debouncedSearchByYear();
   progress();
+  colorBar();
 }
 
 calculatePassiveYears(activeYear);
@@ -352,11 +351,44 @@ function progress(){
   let scale = Number(max_year-min_year);
   let distance = Number(activeYear-min_year);
   let distancePerc = 100/scale*distance;
-
-  let progress = document.querySelector(".timebar_progress")
+  let progress = document.querySelector(".timebar_progress");
   progress.style.width = distancePerc+"%";
 }
 
+// Creates the indicators on the progressbar and assigns eventhandlers
+function colorBar(){
+/*Define variables
+  sliderYears contains the values of the year for the progressbar
+  timebarDiv contains the span elements, which are created/allready created */
+  let sliderYears = [1901, 1910, 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020];
+  let timebarDiv = document.querySelector(".text_nodes");
 
+  // Remove the span elements
+  timebarDiv.innerHTML = "";
 
+  // Adds 13 new span elements, defines their apperence via classes and assigns eventhandlers
+  for(let i = 0; i < sliderYears.length; i++){
+    const spanItem = document.createElement("span");
+    const spanItemText = document.createTextNode(sliderYears[i]);
+
+    spanItem.appendChild(spanItemText);
+    spanItem.setAttribute("class", "slider_item plain");
+    spanItem.setAttribute("data-year", sliderYears[i]);
+
+    // Checks if activeYears is bigger than the value of the span element. If yes adds an additional class
+    if (activeYear >= sliderYears[i]){
+      spanItem.setAttribute("class", "slider_item bright");
+    }
+
+    timebarDiv.appendChild(spanItem);
+
+    // Add an event listener to the span element
+    spanItem.addEventListener("click", function(event) {
+      let newYear = event.target.textContent;
+      activeYear = parseInt(newYear); // Value of newYear was sometimes handled as string. Dont know why. This fixes it.
+      // Call calculatePassiveYear function
+      calculatePassiveYears(activeYear);
+    });
+  }
+}
 
