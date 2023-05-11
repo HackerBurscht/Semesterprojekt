@@ -197,17 +197,10 @@ body{
     margin-bottom: 5em;
     margin-left: auto;
     margin-right: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
     max-width: 60%;
-    position: relative;
-    font-size:small;
-    cursor: pointer;
   }
 
-.slider_item::after{
+.plain:after{
     content: "";
     position: absolute;
     top: -10px;
@@ -215,9 +208,24 @@ body{
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background: #AEB6BF;
+    background: #141414;
     z-index: 1;
+    border: 3px solid #AEB6BF;
 }
+
+.bright::after{
+  content: "";
+  position: absolute;
+  top: -10px;
+  transform: translateX(-140%);
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #ab864f;
+  z-index: 1;
+}
+
+
 
 .timebar{
     width: 100%;
@@ -233,3 +241,19 @@ body{
 .slider_item{
   transform: translateX(-50%);
 }
+
+.text_nodes{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  position: relative;
+  font-size:small;
+  width: 100%;
+  cursor: pointer;
+}
+  
+.plain:hover::after { 
+  background: #ab864f;
+  border: 4px solid #ab864f;
+  }
