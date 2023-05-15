@@ -7,25 +7,7 @@ let activeYear = 2000;      // Defines the year which is shown on startup
 let passiveYear = [];       // Contains all the years which are shown next to the currently selected year "activeYear"
 let nobelPrizeData = null;  // Initialize a variable/array to store Nobel Prize data
 
-/* Animate.css from https://animate.style/
-Animate.css is a library of ready-to-use, cross-browser animations for use in your web projects.
-Great for emphasis, home pages, sliders, and attention-guiding hints. 
-Code adapted from documentaion*/
-const animateCSS = (element, animation, prefix = 'animate__') =>
-  // We create a Promise and return it
-  new Promise((resolve, reject) => {
-    const animationName = `${prefix}${animation}`;
-    const node = document.querySelector(element);
-    node.classList.add(`${prefix}animated`, animationName);
-    // When the animation ends, we clean the classes and resolve the Promise
-    function handleAnimationEnd(event) {
-      event.stopPropagation();
-      node.classList.remove(`${prefix}animated`, animationName);
-      node.style.setProperty('--animate-duration', '0.15s');
-      resolve('Animation ended');
-    }
-    node.addEventListener('animationend', handleAnimationEnd, {once: true});
-  });
+
 
 
  // Creaters the data and shows the modal for each result div (Nobelprice winner). 
@@ -222,7 +204,7 @@ function calculatePassiveYears(activeYear) {
     if(passiveYear.includes(ckeckVar)){
       timelineItems[i].setAttribute("class", "timeline-item passive");
     } else {
-      timelineItems[i].setAttribute("class", "timeline-item invisible");
+      timelineItems[i].setAttribute("class", "timeline-item invisible"); //invisible
     }
     if (ckeckVar == activeYear){
       timelineItems[i].setAttribute("class", "timeline-item active");
@@ -251,20 +233,10 @@ function scroll_event(event) {
   
   // Increasing / Decreasing the variable
   if (event.deltaY < 0) {
-  animateCSS('.timeline', 'fadeOutDown').then((message) => {
-  activeYear -= 1;
-  animateCSS('.timeline', 'fadeInDown').then((message) => {
-	});
-  // Do something after the animation
-	});
+    activeYear += 1;
   } // Scrolling up
   else {
-  animateCSS('.timeline', 'fadeOutUp').then((message) => {
-  activeYear += 1;
-  animateCSS('.timeline', 'fadeInUp').then((message) => {
-	});
-  // Do something after the animation
-	});
+    activeYear -= 1;
   } // Scrolling down
   
   // Checking if the value is bigger/smaller than the max/min value. If yes, values gets set to max/min
@@ -298,17 +270,6 @@ checkboxes.forEach((checkbox) => {
   checkbox.addEventListener("click", debouncedSearchByYear);
 });
 
-// Assigns an eventlistener to the search button
-//document.getElementById("searchButton").addEventListener("click", debouncedSearchByYear);
-
-// Creates an eventlistener for the "enter" key. 
-document.getElementById("yearInput").addEventListener('keypress', function (press) {
-  if (press.key === "Enter") {
-    //activeYear = document.getElementById("yearInput").value;
-    //console.log(activeYear);
-    //calculatePassiveYears(activeYear);
-  }
-});
 
 // Creates an eventlistener for the "wheel" event 
 document.getElementById("timelineID").addEventListener("wheel", scroll_event, { passive: false });
@@ -321,7 +282,6 @@ document.getElementById("timelineID").addEventListener("wheel", scroll_event, { 
 //EH for modal https://www.freecodecamp.org/news/how-to-build-a-modal-with-javascript/
 const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
-const openModalBtn = document.querySelector(".btn-open");
 const closeModalBtn = document.querySelector(".btn-close");
 
 const openModal = function () {
@@ -338,21 +298,30 @@ const closeModal = function () {
 
 closeModalBtn.addEventListener("click", closeModal);
 overlay.addEventListener("click", closeModal)
-//document.addEventListener("keydown");
 
-/* document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape" && !modal.classList.contains("hidden")) {
-    modalClose();
-  }
-}); */
 
 
 function progress(){
   let scale = Number(max_year-min_year);
   let distance = Number(activeYear-min_year);
   let distancePerc = 100/scale*distance;
+
   let progress = document.querySelector(".timebar_progress");
-  progress.style.width = distancePerc+"%";
+  let startPosProg = progress.style.width;
+  let endPosProg = distancePerc+"%";
+  
+
+  // Code addapted from https://www.sitepoint.com/get-started-anime-js/ and https://animejs.com/documentation/#fromToValues
+  let progressAnimation = anime({
+    targets: ".timebar_progress",
+    width: [startPosProg, endPosProg],
+    duration: 350,
+    easing: 'linear',
+    delay: function(el, i, l) {
+      return i * 500;
+    },
+  });   
+
 }
 
 // Creates the indicators on the progressbar and assigns eventhandlers
