@@ -81,6 +81,12 @@ async function searchByYear() {
     return isCategorySelected && isGenderSelected;
   });
 
+  // Checks if there is anydata found. If not, placeholder text is shown to the user.
+  if (nobelPrizeSorted.length == 0){
+    let resultsPlaceholder = document.getElementById("results");
+    resultsPlaceholder.innerHTML = "No data available.";
+  }
+
   // Loop through the Nobel Prize winners for the specified year and category
   for (let i = 0; i < nobelPrizeSorted.length; i++) {
     const d = nobelPrizeSorted[i];
