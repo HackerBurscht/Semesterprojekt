@@ -1,3 +1,4 @@
+/* ------------------------------Overall-------------------------------- */
 :root {
   --activeBronze: #ab864f;
   --bgGrey: #AEB6BF;
@@ -27,9 +28,12 @@ body{
 .form-check{
   padding-right:2.5em;
 }
+
 #main-timeline{
     margin-top: 2em;
 }
+
+/* ------------------------------results-------------------------------- */
 
 #results {
     display: flex;
@@ -51,7 +55,7 @@ body{
 
 #results img:hover {
   filter: grayscale(0) ;
-
+  height: 16.5em;
 }
 
 
