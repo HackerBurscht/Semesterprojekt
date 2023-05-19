@@ -3,12 +3,12 @@ const timelineList = document.querySelector('.timeline-list');
 const timelineListByID = document.getElementById("timelineID");
 const min_year = 1901;      // Is used to limit the timeline to a fixed startingpoint
 const max_year = 2022;      // Is used to limit the timeline to a fixed endgpoint
-let activeYear = 2000;      // Defines the year which is shown on startup
+let activeYear = 2002;      // Defines the year which is shown on startup
 let passiveYear = [];       // Contains all the years which are shown next to the currently selected year "activeYear"
 let nobelPrizeData = null;  // Initialize a variable/array to store Nobel Prize data
 
 
-
+createTimeline()
 
  // Creaters the data and shows the modal for each result div (Nobelprice winner). 
 function createModal(name, born, died, motivation, country, thumbnailUrlModal){
@@ -24,7 +24,6 @@ function createModal(name, born, died, motivation, country, thumbnailUrlModal){
 // Debounce your searchByYear function
 const debouncedSearchByYear = debounce(searchByYear, 500); // 500ms delay
 
-let imageUrlModalArray = [];
 
 // Define an asynchronous function to search for Nobel Prize winners by year
 async function searchByYear() {
@@ -170,31 +169,77 @@ async function searchByYear() {
 
 }
 
-// Create the list items containing the years of the timeline 
-for (let year = min_year; year <= max_year; year++) {
-  // Create li elements with the content "year" e.g. "2001"
-  const listItem = document.createElement('li');
-  listItem.textContent = year;
-  // Defines the class "timeline-item" to the li elements
-  listItem.setAttribute("class", "timeline-item");
-  timelineList.appendChild(listItem);
-
-  // Assing an eventlistener to the li-elements, which fires when a click on a year in the timewheel is recongnized
-  listItem.addEventListener("click", () => {
-  if (year > max_year){activeYear = max_year;}              // Checks if the clicked year is outside or inside the maximal number in the timeline
-  else if (year < min_year){activeYear = min_year;}         // Checks if the clicked year is outside or inside the minimal number in the timeline
-  else {activeYear = year;}                                 // Changes the selected year to the clicked year
-
-  console.log("User jumped to different year.") // Log the status to the console
-  calculatePassiveYears(activeYear);
-});
+// Creates  the li items for the timeline (10 years, scrollable, with buttons)
+function createTimeline() {
+  // Creates an empty text element, befor the list elements.
+  const listItemSelectorLeft = document.createElement("a");
+  listItemSelectorLeft.setAttribute("class", "left selector");
+  timelineList.appendChild(listItemSelectorLeft);
+  // Assing an eventlistener to the selector text element
+  listItemSelectorLeft.addEventListener("click", () => {
+    selectorAction("left");
+  });
+  
+  // Create the list items containing the years of the timeline 
+  for (let year = min_year; year <= max_year; year++) {
+    // Create li elements with the content "year" e.g. "2001"
+    const listItem = document.createElement('li');
+    listItem.textContent = year;
+    // Defines the class "timeline-item" to the li elements
+    listItem.setAttribute("class", "timeline-item");
+    timelineList.appendChild(listItem);
+  
+    // Assing an eventlistener to the li-elements, which fires when a click on a year in the timewheel is recongnized
+    listItem.addEventListener("click", () => {
+    if (year > max_year){activeYear = max_year;}              // Checks if the clicked year is outside or inside the maximal number in the timeline
+    else if (year < min_year){activeYear = min_year;}         // Checks if the clicked year is outside or inside the minimal number in the timeline
+    else {activeYear = year;}                                 // Changes the selected year to the clicked year
+  
+    console.log("User jumped to different year.") // Log the status to the console
+    calculatePassiveYears(activeYear);
+  });
+  }
+  // Creates an empty text element, after the list elements.
+  const listItemSelectorRight = document.createElement("a");
+  listItemSelectorRight.setAttribute("class", "right selector");
+  timelineList.appendChild(listItemSelectorRight);
+  // Assing an eventlistener to the selector text element
+  listItemSelectorRight.addEventListener("click", () => {
+    selectorAction("right");
+  });
 }
 
-// Selects als li elements containing the years from the timeline
-const timelineItems = document.querySelectorAll('.timeline-item');
+
+// Checks if the selectors (Html text elements) should be visible or invisible on the page.
+function selectorCheck(){
+  const listItemSelectorRight = document.querySelector(".right");
+  const listItemSelectorLeft = document.querySelector(".left")
+  //Checks the right element
+  if (activeYear > 2016) {listItemSelectorRight.setAttribute("class", "right hidden");} 
+  else {listItemSelectorRight.setAttribute("class", "right selector");}
+  //Checks the left element
+  if (activeYear < 1906) {listItemSelectorLeft.setAttribute("class", "left hidden");} 
+  else {listItemSelectorLeft.setAttribute("class", "left selector");}
+}
+
+// Is callend when the selector text elment in the timeine is clicked. Checks the current year and changes the activeYear by plus/minus 5
+function selectorAction(direction){
+  // Increasing / Decreasing the variable
+  if (direction=="left") {activeYear -= 5;} 
+  else {activeYear += 5;}
+  
+  // Checking if the value is bigger/smaller than the max/min value. If yes, values gets set to max/min
+  if (activeYear > max_year) {activeYear = max_year;}
+  if (activeYear < min_year) {activeYear = min_year;}
+  
+  calculatePassiveYears(activeYear);
+}
+
 
 //Calculates which li elements should be shown and assings diffrent classes to each. Those are used to differentiate each other and to hide those currently not shown.
 function calculatePassiveYears(activeYear) {
+  // Selects als li elements containing the years from the timeline
+  const timelineItems = document.querySelectorAll('.timeline-item');
   //Empty array "passiveYear"
   passiveYear = []
   // Adds 4 years befor and after the selected year (activeYear) into the array.
@@ -219,7 +264,9 @@ function calculatePassiveYears(activeYear) {
   debouncedSearchByYear();
   progress();
   colorBar();
+  selectorCheck();
 }
+
 
 calculatePassiveYears(activeYear);
 
