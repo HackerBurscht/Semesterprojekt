@@ -414,3 +414,15 @@ function colorBar(){
   }
 }
 
+window.onload = function InfoModalToggle() {
+  const infoModal = document.querySelector(".info_modal");
+  const infoOverlay = document.querySelector(".info_overlay ");
+  infoModal.classList.remove("info_hidden");
+  infoOverlay.classList.remove("hidden");
+
+  document.getElementById("info_button").addEventListener("click", function() {
+    infoModal.classList.add("info_hidden");
+    infoOverlay.classList.add("hidden");
+  });
+
+}
