@@ -417,7 +417,7 @@ const closeModal = function () {
 };
 
 // Function to close the info modal
-function closeInfoModal() {
+function showInfoModal() {
   // Remove the "info_hidden" class to show the info modal and overlay
   infoModal.classList.remove("info_hidden");
   infoOverlay.classList.remove("hidden");
@@ -432,8 +432,8 @@ function fullProzess(){
 }
 
 // Is called when page is laoded. Shows the info modal and assigns eventhandler to the close button
-window.onload = function InfoModalToggle() {
-  closeInfoModal();
+window.onload = function() {
+  showInfoModal();
   setupEventHandlers();
 }
 
