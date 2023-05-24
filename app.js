@@ -9,6 +9,11 @@ let nobelPrizeData = null;  // Initialize a variable/array to store Nobel Prize 
 const infoModal = document.querySelector(".info_modal");      // Initialize a variable to store the info modal element
 const infoOverlay = document.querySelector(".info_overlay");  // Initialize a variable to store the info overlay element
 const debouncedSearchByYear = debounce(searchByYear, 750);    // Debounce your searchByYear function: 750ms delay
+// Eventhandler for modal addapted from: https://www.freecodecamp.org/news/how-to-build-a-modal-with-javascript/
+const modal = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay");
+const closeModalBtn = document.querySelector(".btn-close");
+
 
 // Initialize the timeline
 createTimeline();
@@ -399,11 +404,6 @@ function setupEventHandlers() {
     infoOverlay.classList.remove("hidden");
   });
 }
-
-//Eventhandler for modal addapted from: https://www.freecodecamp.org/news/how-to-build-a-modal-with-javascript/
-const modal = document.querySelector(".modal");
-const overlay = document.querySelector(".overlay");
-const closeModalBtn = document.querySelector(".btn-close");
 
 // Function to open the result modal
 const openModal = function () {
