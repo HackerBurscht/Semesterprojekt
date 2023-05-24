@@ -6,24 +6,23 @@ const max_year = 2022;      // Is used to limit the timeline to a fixed endgpoin
 let activeYear = 2002;      // Defines the year which is shown on startup
 let passiveYear = [];       // Contains all the years which are shown next to the currently selected year "activeYear"
 let nobelPrizeData = null;  // Initialize a variable/array to store Nobel Prize data
+const infoModal = document.querySelector(".info_modal");      // Initialize a variable to store the info modal element
+const infoOverlay = document.querySelector(".info_overlay");  // Initialize a variable to store the info overlay element
+const debouncedSearchByYear = debounce(searchByYear, 750);    // Debounce your searchByYear function: 750ms delay
 
+// Initialize the timeline
+createTimeline();
 
-createTimeline()
-
- // Creaters the data and shows the modal for each result div (Nobelprice winner). 
-function createModal(name, born, died, motivation, country, thumbnailUrlModal){
-  document.getElementById("modal-name").innerHTML = name;
-  document.getElementById("modal-country").innerHTML = country;
-  document.getElementById("modal-born").innerHTML = born;
-  document.getElementById("modal-dead").innerHTML = died;
-  document.getElementById("modal-motivation").innerHTML = motivation;
-  document.getElementById("modal-image").src = thumbnailUrlModal;
-  openModal()
-} 
-
-// Debounce your searchByYear function
-const debouncedSearchByYear = debounce(searchByYear, 500); // 500ms delay
-
+// Creaters the data and shows the modal for each result div (Nobelprice winner)
+function createModal(name, born, died, motivation, country, thumbnailUrlModal) {
+  document.querySelector("#modal-name").textContent = name;
+  document.querySelector("#modal-country").textContent = country;
+  document.querySelector("#modal-born").textContent = born;
+  document.querySelector("#modal-dead").textContent = died;
+  document.querySelector("#modal-motivation").textContent = motivation;
+  document.querySelector("#modal-image").src = thumbnailUrlModal;
+  openModal();
+}
 
 // Define an asynchronous function to search for Nobel Prize winners by year
 async function searchByYear() {
@@ -96,7 +95,6 @@ async function searchByYear() {
     // Create a div element to display the search result
     const divItem = document.createElement("div");
     divItem.className = "result-item";
-
   
     // Create a list item element to display the winner's name
     const listItem = document.createElement("li");
@@ -146,7 +144,7 @@ async function searchByYear() {
         let born = "";
         let died = "";
         let country = "";
-        // Check if...
+        // Check if the data is available and if not, set the variable to an empty string
         if(!d.Born){born = ""}else{born = "Born: " + `${d.Born}`;};
         if(!d.Died){d.Died = ""}else{died = "Died: " + `${d.Died}`;};
         if(!d.Country){d.Country = ""}else{country = "Born in: " + `${d.Country}`;};
@@ -165,8 +163,6 @@ async function searchByYear() {
       // Append the result item to the results list
       results.appendChild(divItem);
     }
-
-
 }
 
 // Creates  the li items for the timeline (10 years, scrollable, with buttons)
@@ -197,7 +193,7 @@ function createTimeline() {
   
     console.log("User jumped to different year.") // Log the status to the console
     calculatePassiveYears(activeYear);
-  });
+    });
   }
   // Creates an empty text element, after the list elements.
   const listItemSelectorRight = document.createElement("a");
@@ -209,17 +205,17 @@ function createTimeline() {
   });
 }
 
-
 // Checks if the selectors (Html text elements) should be visible or invisible on the page.
 function selectorCheck(){
+  // Gets the html elements and assigns them to variables
   const listItemSelectorRight = document.querySelector(".right");
   const listItemSelectorLeft = document.querySelector(".left")
-  //Checks the right element
-  if (activeYear > 2016) {listItemSelectorRight.setAttribute("class", "right hidden");} 
-  else {listItemSelectorRight.setAttribute("class", "right selector");}
-  //Checks the left element
-  if (activeYear < 1906) {listItemSelectorLeft.setAttribute("class", "left hidden");} 
-  else {listItemSelectorLeft.setAttribute("class", "left selector");}
+  // Checks the right element
+  listItemSelectorRight.classList.toggle("hidden", activeYear > 2016);
+  listItemSelectorRight.classList.toggle("selector", activeYear <= 2016);
+  // Checks the left element
+  listItemSelectorLeft.classList.toggle("hidden", activeYear < 1906);
+  listItemSelectorLeft.classList.toggle("selector", activeYear >= 1906);
 }
 
 // Is callend when the selector text elment in the timeine is clicked. Checks the current year and changes the activeYear by plus/minus 5
@@ -227,47 +223,44 @@ function selectorAction(direction){
   // Increasing / Decreasing the variable
   if (direction=="left") {activeYear -= 5;} 
   else {activeYear += 5;}
-  
   // Checking if the value is bigger/smaller than the max/min value. If yes, values gets set to max/min
   if (activeYear > max_year) {activeYear = max_year;}
   if (activeYear < min_year) {activeYear = min_year;}
-  
   calculatePassiveYears(activeYear);
 }
 
-
 //Calculates which li elements should be shown and assings diffrent classes to each. Those are used to differentiate each other and to hide those currently not shown.
 function calculatePassiveYears(activeYear) {
-  // Selects als li elements containing the years from the timeline
+  // Selects all li elements containing the years from the timeline
   const timelineItems = document.querySelectorAll('.timeline-item');
-  //Empty array "passiveYear"
-  passiveYear = []
-  // Adds 4 years befor and after the selected year (activeYear) into the array.
-  for (i = 1; i<5; i++){
-    passiveYear.push(activeYear -i);
-    passiveYear.push(activeYear +i);
+  // Empty array "passiveYear"
+  const passiveYear = [];
+  // Adds 4 years before and after the selected year (activeYear) into the array.
+  for (let i = 1; i < 5; i++) {
+    passiveYear.push(activeYear - i);
+    passiveYear.push(activeYear + i);
   }
-  // Sort "function" for numbers from: https://www.w3schools.com/js/js_array_sort.asp
-  passiveYear.sort(function(a, b){return a - b});
-  for (i = 0; i < timelineItems.length; i++) {
-    //Checks if the years inside the array are values from li elements on the page and adds further html classes o those
-    let ckeckVar = Number(timelineItems[i].innerHTML);
-    if(passiveYear.includes(ckeckVar)){
-      timelineItems[i].setAttribute("class", "timeline-item passive");
+  // Sort the array in ascending order addapted from: https://www.w3schools.com/js/js_array_sort.asp
+  passiveYear.sort((a, b) => a - b);
+
+  for (let i = 0; i < timelineItems.length; i++) {
+    // Checks if the years inside the array are values from li elements on the page and adds further HTML classes to those
+    const timelineItem = timelineItems[i];
+    const yearValue = Number(timelineItem.innerHTML);
+    
+    if (passiveYear.includes(yearValue)) {
+      timelineItem.setAttribute("class", "timeline-item passive");
+    } else if (yearValue === activeYear) {
+      timelineItem.setAttribute("class", "timeline-item active");
     } else {
-      timelineItems[i].setAttribute("class", "timeline-item invisible"); //invisible
-    }
-    if (ckeckVar == activeYear){
-      timelineItems[i].setAttribute("class", "timeline-item active");
+      timelineItem.setAttribute("class", "timeline-item invisible");
     }
   }
-  debouncedSearchByYear();
-  progress();
-  colorBar();
-  selectorCheck();
+  // Call other functions
+fullProzess();
 }
 
-
+// Initializes the passive years and the active year
 calculatePassiveYears(activeYear);
 
 // Use the fetch API to load Nobel Prize data from a local JSON file
@@ -282,20 +275,18 @@ fetch('./data.json')
 /*Defines a function to increase or decrease the timespan which should be displayed in the timeline.
 Part of the code addapted from: https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event */
 function scroll_event(event) {
+  // Prevent the default action of scrolling the page
   event.preventDefault(); 
-  
+
   // Increasing / Decreasing the variable
-  if (event.deltaY < 0) {
-    activeYear += 1;
-  } // Scrolling up
-  else {
-    activeYear -= 1;
-  } // Scrolling down
+  if (event.deltaY < 0) {activeYear += 1;} // Scrolling up
+  else {activeYear -= 1;} // Scrolling down
   
   // Checking if the value is bigger/smaller than the max/min value. If yes, values gets set to max/min
   if (activeYear > max_year) {activeYear = max_year;}
   if (activeYear < min_year) {activeYear = min_year;}
   
+  // Call calculatePassiveYears function to calculate which years should be shown
   calculatePassiveYears(activeYear);
 	
   // Log the status to the console
@@ -316,61 +307,26 @@ function debounce(func, delayTime) {
   };
 }
 
-/* Global Eventhandler functions
-Gets all filter-checkboxes and assigns an eventlistener to each */
-const checkboxes = document.querySelectorAll(".form-check");
-checkboxes.forEach((checkbox) => {
-  checkbox.addEventListener("click", debouncedSearchByYear);
-});
-
-
-// Creates an eventlistener for the "wheel" event 
-document.getElementById("timelineID").addEventListener("wheel", scroll_event, { passive: false });
-
-
-
-
-
-
-//EH for modal https://www.freecodecamp.org/news/how-to-build-a-modal-with-javascript/
-const modal = document.querySelector(".modal");
-const overlay = document.querySelector(".overlay");
-const closeModalBtn = document.querySelector(".btn-close");
-
-const openModal = function () {
-  modal.classList.remove("hidden");
-  overlay.classList.remove("hidden");
-};
-
-//openModalBtn.addEventListener("click", openModal);
-
-const closeModal = function () {
-  modal.classList.add("hidden");
-  overlay.classList.add("hidden");
-};
-
-closeModalBtn.addEventListener("click", closeModal);
-overlay.addEventListener("click", closeModal)
-
-
-
+// Defines a function to animate the progressbar
 function progress(){
+  // Calculate the distance between the min_year and the max_year, the distance between the min_year and the activeYear and convert them to a percentage
   let scale = Number(max_year-min_year);
   let distance = Number(activeYear-min_year);
   let distancePerc = 100/scale*distance;
 
+  // Gets the progressbar and the current width of the progressbar
   let progress = document.querySelector(".timebar_progress");
   let startPosProg = progress.style.width;
   let endPosProg = distancePerc+"%";
   
-
+  // Animates the progressbar
   // Code addapted from https://www.sitepoint.com/get-started-anime-js/ and https://animejs.com/documentation/#fromToValues
-  let progressAnimation = anime({
+  anime({
     targets: ".timebar_progress",
     width: [startPosProg, endPosProg],
-    duration: 350,
+    duration: 750,
     easing: 'linear',
-    delay: function(el, i, l) {
+    delay: function(el, i) {
       return i * 500;
     },
   });   
@@ -401,7 +357,6 @@ function colorBar(){
     if (activeYear >= sliderYears[i]){
       spanItem.setAttribute("class", "slider_item bright");
     }
-
     timebarDiv.appendChild(spanItem);
 
     // Add an event listener to the span element
@@ -414,15 +369,71 @@ function colorBar(){
   }
 }
 
-window.onload = function InfoModalToggle() {
-  const infoModal = document.querySelector(".info_modal");
-  const infoOverlay = document.querySelector(".info_overlay ");
-  infoModal.classList.remove("info_hidden");
-  infoOverlay.classList.remove("hidden");
+// Global Eventhandler functions
+function setupEventHandlers() {
+  // Eventhandler for the timeline is handled seperatly in colorBar() function
+  //Gets all filter-checkboxes and assigns an event listener to each
+  const checkboxes = document.querySelectorAll(".form-check");
+    checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("click", debouncedSearchByYear);
+  });
 
+  // Creates an event listener for the "wheel" event
+  document.getElementById("timelineID").addEventListener("wheel", scroll_event, { passive: false });
+
+  // Creates an event listener for the "click" event to the close button and the modal
+  closeModalBtn.addEventListener("click", closeModal);
+  overlay.addEventListener("click", closeModal)
+
+  // Add event listener to the info button
   document.getElementById("info_button").addEventListener("click", function() {
+    // Add the "info_hidden" class to hide the info modal and overlay
     infoModal.classList.add("info_hidden");
     infoOverlay.classList.add("hidden");
   });
 
+  // Add event listener to the about button to show the info modal
+  document.getElementById("about").addEventListener("click", function() {
+    // Remove the "info_hidden" class to show the info modal and overlay
+    infoModal.classList.remove("info_hidden");
+    infoOverlay.classList.remove("hidden");
+  });
 }
+
+//Eventhandler for modal addapted from: https://www.freecodecamp.org/news/how-to-build-a-modal-with-javascript/
+const modal = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay");
+const closeModalBtn = document.querySelector(".btn-close");
+
+// Function to open the result modal
+const openModal = function () {
+  modal.classList.remove("hidden");
+  overlay.classList.remove("hidden");
+};
+// Function to close the result modal
+const closeModal = function () {
+  modal.classList.add("hidden");
+  overlay.classList.add("hidden");
+};
+
+// Function to close the info modal
+function closeInfoModal() {
+  // Remove the "info_hidden" class to show the info modal and overlay
+  infoModal.classList.remove("info_hidden");
+  infoOverlay.classList.remove("hidden");
+}
+
+// Function to call all part of the process in order
+function fullProzess(){
+  debouncedSearchByYear();
+  progress();
+  colorBar();
+  selectorCheck();
+}
+
+// Is called when page is laoded. Shows the info modal and assigns eventhandler to the close button
+window.onload = function InfoModalToggle() {
+  closeInfoModal();
+  setupEventHandlers();
+}
+
