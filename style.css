@@ -47,6 +47,7 @@ body {
 }
 
 #results img:hover {
+  z-index: 100;
   filter: grayscale(0);
   height: 16.5em;
 }
@@ -149,11 +150,11 @@ body {
 /* ------------------------------Modal-------------------------------- */
 
 .modal {
-
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  overflow: hidden;
 
   background-image: url("assets/img/bg.png");
   z-index:2;
@@ -164,7 +165,7 @@ body {
   justify-content: center;
 
   padding: 1.3rem;
-  max-height: 55%;
+  max-height: 85%;
 
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -180,10 +181,12 @@ body {
   }
   
   .btn-close {
-    transform: translate(10px, -20px);
-    padding: 0.5rem 0.7rem;
+    display: flex;
+    transform: translate(15px, -20px);
     background: #eee;
     border-radius: 50%;
+    justify-content: space-evenly;
+    align-items: center;
   }
 
   .overlay {
@@ -291,9 +294,8 @@ body {
   z-index: 1;
 }
 
-
 .info_modal {
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -374,6 +376,7 @@ margin-bottom: 1em;
   }
 }
 
+/* ----------------------------Footer-Button-------------------------------- */
 #about{
   color: var(--bgGrey);
   font-size: 0.8em;
