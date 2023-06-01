@@ -14,7 +14,6 @@ const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const closeModalBtn = document.querySelector(".btn-close");
 
-
 // Initialize the timeline
 createTimeline();
 
@@ -52,8 +51,6 @@ function createModal(name, born, died, motivation, country, thumbnailUrlModal, c
   // Call the openModal function 
   openModal();
 }
-
-
 
 // Define an asynchronous function to search for Nobel Prize winners by year
 async function searchByYear() {
@@ -202,8 +199,10 @@ async function searchByYear() {
 function createTimeline() {
   // Creates an empty text element, befor the list elements.
   const listItemSelectorLeft = document.createElement("a");
+
   listItemSelectorLeft.setAttribute("class", "left selector");
   timelineList.appendChild(listItemSelectorLeft);
+
   // Assing an eventlistener to the selector text element
   listItemSelectorLeft.addEventListener("click", () => {
     selectorAction("left");
@@ -228,6 +227,7 @@ function createTimeline() {
     calculatePassiveYears(activeYear);
     });
   }
+
   // Creates an empty text element, after the list elements.
   const listItemSelectorRight = document.createElement("a");
   listItemSelectorRight.setAttribute("class", "right selector");
@@ -289,21 +289,13 @@ function calculatePassiveYears(activeYear) {
       timelineItem.setAttribute("class", "timeline-item invisible");
     }
   }
-  // Call other functions
+
+// Call other functions
 fullProzess();
 }
 
 // Initializes the passive years and the active year
 calculatePassiveYears(activeYear);
-
-// Use the fetch API to load Nobel Prize data from a local JSON file
-fetch('./data.json')
-  .then(response => response.json()) // Parse the response as JSON
-  .then(data => {
-    nobelPrizeData = data; // Store the parsed data in the `nobelPrizeData` variable
-    console.log("JSON-Data has been read."); // Log the status in the console.
-  });
-
 
 /*Defines a function to increase or decrease the timespan which should be displayed in the timeline.
 Part of the code addapted from: https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event */
@@ -463,5 +455,12 @@ function fullProzess(){
 window.onload = function() {
   showInfoModal();
   setupEventHandlers();
+  // Use the fetch API to load Nobel Prize data from a local JSON file
+  fetch('./data.json')
+    .then(response => response.json()) // Parse the response as JSON
+    .then(data => {
+    nobelPrizeData = data; // Store the parsed data in the `nobelPrizeData` variable
+    console.log("JSON-Data has been read."); // Log the status in the console.
+  });
 }
 
