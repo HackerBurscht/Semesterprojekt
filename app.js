@@ -18,16 +18,42 @@ const closeModalBtn = document.querySelector(".btn-close");
 // Initialize the timeline
 createTimeline();
 
-// Creaters the data and shows the modal for each result div (Nobelprice winner)
-function createModal(name, born, died, motivation, country, thumbnailUrlModal) {
+// Creates the data and shows the modal for each result div (Nobel Prize winner)
+function createModal(name, born, died, motivation, country, thumbnailUrlModal, categoryModal) {
+  // Set the text content of various modal elements
   document.querySelector("#modal-name").textContent = name;
   document.querySelector("#modal-country").textContent = country;
   document.querySelector("#modal-born").textContent = born;
   document.querySelector("#modal-dead").textContent = died;
   document.querySelector("#modal-motivation").textContent = motivation;
-  document.querySelector("#modal-image").src = thumbnailUrlModal;
+  document.querySelector("#modal-cat").textContent = "Category: " + categoryModal;
+
+  // Get references to the modal image container and image elements
+  var modalImageContainer = document.querySelector("#modal-image-container");
+  var modalImage = document.querySelector("#modal-image");
+
+  if (!modalImage) {
+    // Create a new image element if modalImage is not found
+    modalImage = document.createElement("img");
+    modalImage.id = "modal-image";
+    modalImageContainer.appendChild(modalImage);
+    modalImage.style.height = "350px";
+    modalImage.style.width = "350px";
+  }
+
+  if (thumbnailUrlModal == "assets/img/placeholder.png") {
+    // Remove the modal image if the thumbnail URL is the placeholder image
+    modalImage.remove();
+  } else {
+    // Set the source URL of the modal image
+    modalImage.src = thumbnailUrlModal;
+  }
+
+  // Call the openModal function 
   openModal();
 }
+
+
 
 // Define an asynchronous function to search for Nobel Prize winners by year
 async function searchByYear() {
@@ -153,8 +179,10 @@ async function searchByYear() {
         if(!d.Born){born = ""}else{born = "Born: " + `${d.Born}`;};
         if(!d.Died){d.Died = ""}else{died = "Died: " + `${d.Died}`;};
         if(!d.Country){d.Country = ""}else{country = "Born in: " + `${d.Country}`;};
+        categoryModal = d.Category;
+
         // Call createModal function with with the according data
-        createModal(name, born, died, motivation, country, thumbnailUrlModal);
+        createModal(name, born, died, motivation, country, thumbnailUrlModal, categoryModal);
       });
 
       // Create a list item element for the Nobel prize winner's category
